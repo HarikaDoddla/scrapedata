@@ -1,0 +1,182 @@
+Restaurant Data Scraper Documentation
+Overview
+The Restaurant Scraper is a Python-based web scraping tool designed to collect restaurant information from Google Search results. It uses Selenium WebDriver for browser automation and BeautifulSoup for HTML parsing.
+Features
+
+Automated scraping of restaurant data from Google Search
+Rate limiting to prevent blocking
+Data validation and cleaning
+CSV export functionality
+Detailed logging
+Configurable search parameters
+
+Dependencies
+pythonCopyselenium==4.x.x
+beautifulsoup4==4.x.x
+pandas
+webdriver_manager
+fake_useragent
+logging
+typing
+Class Structure
+RestaurantScraper Class
+Initialization Methods
+
+__init__()
+
+Initializes the scraper with browser setup and logging configuration
+Sets rate limiting parameters
+
+
+setup_browser()
+
+Configures Chrome WebDriver with headless mode
+Sets browser options for automation
+Initializes random user agent
+
+
+setup_logging()
+
+Configures logging with timestamp and level information
+Creates log file: 'scraper.log'
+
+
+
+Core Methods
+
+rate_limit()
+
+Purpose: Manages request frequency
+Limits: 10 requests per minute
+Adds random delays between 2-4 seconds
+
+
+validate_data(data: Dict) -> bool
+
+Validates required fields: name, rating, address, phone
+Returns: Boolean indicating data validity
+
+
+clean_text(text: Optional[str]) -> str
+
+Cleans text data by removing extra spaces
+Handles None values
+Returns: Cleaned string or "N/A"
+
+
+scrape_restaurants(location: str, max_results: int = 20) -> List[Dict]
+
+Main scraping method
+Parameters:
+
+location: Target area for restaurant search
+max_results: Maximum number of restaurants to scrape (default: 20)
+
+
+Returns: List of restaurant dictionaries
+
+
+save_data(data: List[Dict]) -> str
+
+Saves scraped data to CSV
+Filename format: 'restaurants_YYYYMMDD_HHMMSS.csv'
+Returns: Generated filename
+
+
+
+Data Structure
+The scraper collects the following information for each restaurant:
+pythonCopy{
+    'name': 'Restaurant Name',
+    'rating': 'X.X',  # Google rating (0.0-5.0)
+    'address': 'Full Address',
+    'phone': 'Phone Number'
+}
+Usage Example
+pythonCopydef main():
+    # Create scraper instance
+    scraper = RestaurantScraper()
+    
+    # Set location and max results
+    location = "Downtown Toronto"
+    max_results = 20
+    
+    # Run scraper
+    restaurants = scraper.scrape_restaurants(location, max_results)
+    
+    # Save results
+    if restaurants:
+        filename = scraper.save_data(restaurants)
+        print(f"Data saved to {filename}")
+Error Handling
+
+Implements try-except blocks for robust error handling
+Logs errors to scraper.log
+Handles common exceptions:
+
+TimeoutException
+NoSuchElementException
+General exceptions
+
+
+
+Best Practices
+
+Rate Limiting
+
+Respects website's rate limits
+Implements random delays
+Maximum 10 requests per minute
+
+
+Data Validation
+
+Validates all required fields
+Cleans and standardizes data
+Handles missing values
+
+
+Browser Configuration
+
+Uses headless mode
+Rotates user agents
+Sets appropriate window size
+
+
+
+Output Format
+The scraper generates a CSV file with the following columns:
+csvCopyname,rating,address,phone
+Restaurant Name,X.X,Full Address,Phone Number
+Logging
+
+Log file: scraper.log
+Logs include:
+
+Timestamp
+Log level
+Detailed messages
+Error traces
+
+
+
+Limitations
+
+Depends on Google's search results structure
+Rate limited to 10 requests per minute
+Maximum results configurable but limited by available data
+Requires stable internet connection
+May be affected by Google's layout changes
+
+Maintenance
+
+Regular updates may be needed for:
+
+CSS selectors
+User agent strings
+Rate limiting parameters
+Browser compatibility
+
+
+
+This documentation provides a comprehensive overview of the Restaurant Scraper code's functionality, usage, and maintenance requirements. Let me know if you need any clarification or additional details about specific components.
